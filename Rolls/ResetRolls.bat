@@ -1,3 +1,5 @@
+::This project is licensed under the terms of the GNU General Public License v3.0.
+
 @echo off
 for /f "delims=" %%a in ('cd') do @set dir=%%a
 del %dir%\6.txt
