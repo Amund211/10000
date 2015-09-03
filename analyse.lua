@@ -1,3 +1,5 @@
+--This project is licensed under the terms of the GNU General Public License v3.0.
+
 local adr=io.popen("cd"):read()
 local dir=string.gsub(adr, "\\", "/")
 
