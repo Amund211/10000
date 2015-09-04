@@ -42,10 +42,6 @@ for diceNum=6, 1, -1 do
 								if tonumber(dice[5])==5 then
 									if tonumber(dice[6])==6 then
 										tmpScore=2000
-										--test:write("\nStraight: ")
-										--for itr=1, 6 do
-											--test:write(dice[itr])
-										--end
 										dice = {}
 									end
 								end
@@ -69,10 +65,6 @@ for diceNum=6, 1, -1 do
 												if itr3==bl1 then elseif itr3==bl2 then else
 													if tonumber(dice[5])==itr3 then
 														if tonumber(dice[6])==itr3 then
-															--test:write("\n3 pairs: ")
-															--for itr=1, 6 do
-																--test:write(dice[itr])
-															--end
 															dice={}
 															tmpScore=1500										
 														end
@@ -269,6 +261,7 @@ for diceNum=6, 1, -1 do
 		tmpScore=0
 		tmpDiceLeft=0
 		
+		
 	end
 	
 	
@@ -302,5 +295,11 @@ for diceNum=6, 1, -1 do
 		o:write("\n")
 		o:write("\n")
 	end
+	
+	--Saving values to tables
+	_G["Stats"..diceNum]["totRolls"]=totRolls
+	_G["Stats"..diceNum]["totWins"]=totWins
+	_G["Stats"..diceNum]["totScore"]=totScore
+	
 
 end
