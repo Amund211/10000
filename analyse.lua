@@ -304,9 +304,10 @@ for diceNum=6, 1, -1 do
 	--Saving values to tables
 	_G["Stats"..diceNum]={}
 	_G["Stats"..diceNum]["EffAvg"]=totScore/totWins*totWins/totRolls
+	_G["Stats"..diceNum]["WinChance"]=totWins/totRolls
 	for itr6=5, 0, -1 do
 		if diceNum>itr6 then
-			_G["Stats"..diceNum]["Rem"..itr6]=tonumber(DiceLeft[itr6])/totRolls*100
+			_G["Stats"..diceNum]["Rem"..itr6]=tonumber(DiceLeft[itr6])/totRolls
 		end	
 	end
 	
@@ -316,13 +317,54 @@ end
 --------------Recursive Effective Average--------------- 
 
 local RecEffAvg={}
-RecEffAvg[1]=Stats1["EffAvg"]
-RecEffAvg[2]=Stats2["EffAvg"]+Stats1["EffAvg"]*Stats2["Rem1"]
-RecEffAvg[3]=Stats3["EffAvg"]+Stats1["EffAvg"]*Stats3["Rem1"]+Stats2["EffAvg"]*Stats3["Rem2"]
-RecEffAvg[4]=Stats4["EffAvg"]+Stats1["EffAvg"]*Stats4["Rem1"]+Stats2["EffAvg"]*Stats4["Rem2"]+Stats3["EffAvg"]*Stats4["Rem3"]
-RecEffAvg[5]=Stats5["EffAvg"]+Stats1["EffAvg"]*Stats5["Rem1"]+Stats2["EffAvg"]*Stats5["Rem2"]+Stats3["EffAvg"]*Stats5["Rem3"]+Stats4["EffAvg"]*Stats5["Rem4"]
-RecEffAvg[6]=Stats6["EffAvg"]+Stats1["EffAvg"]*Stats6["Rem1"]+Stats2["EffAvg"]*Stats6["Rem2"]+Stats3["EffAvg"]*Stats6["Rem3"]+Stats4["EffAvg"]*Stats6["Rem4"]+Stats5["EffAvg"]*Stats6["Rem5"]
 
+RecEffAvg[1]=Stats1["EffAvg"]+(Stats6["EffAvg"]*Stats1["Rem0"])
+local tmpLastVal1=(Stats6["EffAvg"]*Stats1["Rem0"])
+
+RecEffAvg[2]=Stats2["EffAvg"]+(Stats6["EffAvg"]*Stats2["Rem0"]+RecEffAvg[1]*Stats2["Rem1"])
+local tmpLastVal2=(Stats6["EffAvg"]*Stats2["Rem0"]+RecEffAvg[1]*Stats2["Rem1"])
+
+RecEffAvg[3]=Stats3["EffAvg"]+(Stats6["EffAvg"]*Stats3["Rem0"]+RecEffAvg[1]*Stats3["Rem1"]+RecEffAvg[2]*Stats3["Rem2"])
+local tmpLastVal3=(Stats6["EffAvg"]*Stats3["Rem0"]+RecEffAvg[1]*Stats3["Rem1"]+RecEffAvg[2]*Stats3["Rem2"])
+
+RecEffAvg[4]=Stats4["EffAvg"]+(Stats6["EffAvg"]*Stats4["Rem0"]+RecEffAvg[1]*Stats4["Rem1"]+RecEffAvg[2]*Stats4["Rem2"]+RecEffAvg[3]*Stats4["Rem3"])
+local tmpLastVal4=(Stats6["EffAvg"]*Stats4["Rem0"]+RecEffAvg[1]*Stats4["Rem1"]+RecEffAvg[2]*Stats4["Rem2"]+RecEffAvg[3]*Stats4["Rem3"])
+
+RecEffAvg[5]=Stats5["EffAvg"]+(Stats6["EffAvg"]*Stats5["Rem0"]+RecEffAvg[1]*Stats5["Rem1"]+RecEffAvg[2]*Stats5["Rem2"]+RecEffAvg[3]*Stats5["Rem3"]+RecEffAvg[4]*Stats5["Rem4"])
+local tmpLastVal5=(Stats6["EffAvg"]*Stats5["Rem0"]+RecEffAvg[1]*Stats5["Rem1"]+RecEffAvg[2]*Stats5["Rem2"]+RecEffAvg[3]*Stats5["Rem3"]+RecEffAvg[4]*Stats5["Rem4"])
+
+RecEffAvg[6]=Stats6["EffAvg"]+(RecEffAvg[1]*Stats6["Rem1"]+RecEffAvg[2]*Stats6["Rem2"]+RecEffAvg[3]*Stats6["Rem3"]+RecEffAvg[4]*Stats6["Rem4"]+RecEffAvg[5]*Stats6["Rem5"])
+local tmpLastVal6=(RecEffAvg[1]*Stats6["Rem1"]+RecEffAvg[2]*Stats6["Rem2"]+RecEffAvg[3]*Stats6["Rem3"]+RecEffAvg[4]*Stats6["Rem4"]+RecEffAvg[5]*Stats6["Rem5"])
+
+
+
+for itr7=1, 1 do
+
+RecEffAvg[1]=RecEffAvg[1]-tmpLastVal1
+RecEffAvg[1]=RecEffAvg[1]+(RecEffAvg[6]*Stats1["Rem0"])
+local tmpLastVal1=(RecEffAvg[6]*Stats1["Rem0"])
+
+RecEffAvg[2]=RecEffAvg[2]-tmpLastVal2
+RecEffAvg[2]=RecEffAvg[2]+(RecEffAvg[6]*Stats2["Rem0"]+RecEffAvg[1]*Stats2["Rem1"])
+local tmpLastVal2=(RecEffAvg[6]*Stats2["Rem0"]+RecEffAvg[1]*Stats2["Rem1"])
+
+RecEffAvg[3]=RecEffAvg[3]-tmpLastVal3
+RecEffAvg[3]=RecEffAvg[3]+(RecEffAvg[6]*Stats3["Rem0"]+RecEffAvg[1]*Stats3["Rem1"]+RecEffAvg[2]*Stats3["Rem2"])
+local tmpLastVal3=(RecEffAvg[6]*Stats3["Rem0"]+RecEffAvg[1]*Stats3["Rem1"]+RecEffAvg[2]*Stats3["Rem2"])
+
+RecEffAvg[4]=RecEffAvg[4]-tmpLastVal4
+RecEffAvg[4]=RecEffAvg[4]+(RecEffAvg[6]*Stats4["Rem0"]+RecEffAvg[1]*Stats4["Rem1"]+RecEffAvg[2]*Stats4["Rem2"]+RecEffAvg[3]*Stats4["Rem3"])
+local tmpLastVal4=(RecEffAvg[6]*Stats4["Rem0"]+RecEffAvg[1]*Stats4["Rem1"]+RecEffAvg[2]*Stats4["Rem2"]+RecEffAvg[3]*Stats4["Rem3"])
+
+RecEffAvg[5]=RecEffAvg[5]-tmpLastVal5
+RecEffAvg[5]=RecEffAvg[5]+(RecEffAvg[6]*Stats5["Rem0"]+RecEffAvg[1]*Stats5["Rem1"]+RecEffAvg[2]*Stats5["Rem2"]+RecEffAvg[3]*Stats5["Rem3"]+RecEffAvg[4]*Stats5["Rem4"])
+local tmpLastVal5=(RecEffAvg[6]*Stats5["Rem0"]+RecEffAvg[1]*Stats5["Rem1"]+RecEffAvg[2]*Stats5["Rem2"]+RecEffAvg[3]*Stats5["Rem3"]+RecEffAvg[4]*Stats5["Rem4"])
+
+RecEffAvg[6]=RecEffAvg[6]-tmpLastVal6
+RecEffAvg[6]=RecEffAvg[6]+(RecEffAvg[1]*Stats6["Rem1"]+RecEffAvg[2]*Stats6["Rem2"]+RecEffAvg[3]*Stats6["Rem3"]+RecEffAvg[4]*Stats6["Rem4"]+RecEffAvg[5]*Stats6["Rem5"])
+local tmpLastVal6=(RecEffAvg[1]*Stats6["Rem1"]+RecEffAvg[2]*Stats6["Rem2"]+RecEffAvg[3]*Stats6["Rem3"]+RecEffAvg[4]*Stats6["Rem4"]+RecEffAvg[5]*Stats6["Rem5"])
+
+end
 
 
 
@@ -606,7 +648,20 @@ for diceNum=6, 1, -1 do
 	o:write("Effective Average Score: "..(totScore/totWins*totWins/totRolls).."\n")
 	o:write("Largest bet for average profit: "..(totWins/totRolls*totScore/totWins/(1-totWins/totRolls)).."\n")
 	o:write("Recursive Effective Average: "..RecEffAvg[diceNum].."\n")
-	o:write("Largest bet for average profite recursively"..().."\n")
+	
+	local tmpRecWinChance2=Stats1["WinChance"]*Stats2["WinChance"])
+	local tmpRecWinChance3=Stats1["WinChance"]*(Stats2["WinChance"]+Stats3["WinChance"])/2
+	local tmpRecWinChance4=Stats1["WinChance"]*(Stats2["WinChance"]+Stats3["WinChance"]+Stats4["WinChance"])/3
+	local tmpRecWinChance5=Stats1["WinChance"]*(Stats2["WinChance"]+Stats3["WinChance"]+Stats4["WinChance"]+Stats5["WinChance"])/4
+	local tmpRecWinChance6=Stats1["WinChance"]*(Stats2["WinChance"]+Stats3["WinChance"]+Stats4["WinChance"]+Stats5["WinChance"]+Stats5["WinChance"])/5
+	
+	if diceNum>1 then
+		o:write("Largest bet for average profite recursively: "..((_G["Stats"..diceNum]["WinChance"])*RecEffAvg[diceNum]/((1-(_G[tmpRecWinChance..diceNum]))).."\n"))
+	else
+		o:write("Largest bet for average profite recursively: "..(Stats1["WinChance"]*RecEffAvg[diceNum]/(1-Stats1["WinChance"])).."\n")
+	end
+	
+	
 	for itr5=5, 0, -1 do
 		if diceNum>itr5 then
 			o:write("Chance for "..itr5.." dice remaining: "..(tonumber(DiceLeft[itr5])/totRolls*100).."\n")
